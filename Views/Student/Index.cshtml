@@ -1,0 +1,128 @@
+﻿@model IEnumerable<CurdOperationEntityFramework.Models.Entities.Student>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Add">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model=>model.Id)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem=>item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Address)
+            </td>
+            <td>
+                @* <a href="javascript:void(0);" onclick="openModal('/Student/Edit/@item.Id')">Edit</a> *@
+                    <a href="javascript:void(0);" class="btnEdit" data-action="/Student/Edit/@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a href="javascript:void(0);" class="btnDelete" data-action="/Student/Delete/@item.Id">Edit</a> 
+               
+                @* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+            </td>
+        </tr>
+}
+    </tbody>
+</table>    
+
+<!-- Bootstrap Modal (Reusable) -->
+<div class="modal fade" id="modalContainer" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be loaded via AJAX -->
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        console.log("jQuery is loaded!");
+    });
+
+    $(document).ready(function () {
+
+       
+            $(".btnEdit").click(function(){
+                var url = $(this).data("action");
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function (data) {
+                        $("#modalBody").html(data);
+                         $("#modalContainer").modal("show");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
+
+        $(".btnDelete").click(function () {
+
+            var url = $(this).data("action");
+
+            $.ajax({
+                url:url,
+                type:'Delete'
+                success: function (data) {
+                    alret("deleted Successfully..")
+                    console.log("Deleted Successfully..!")
+                },
+                error: function () {
+                    console.log("Not Deleted")
+                }
+
+            });
+        });
+
+            
+       
+
+    });
+
+</script>
